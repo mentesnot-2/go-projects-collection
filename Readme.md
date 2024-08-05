@@ -1,1 +1,1 @@
-Collection of Go projects
+## Collection of Go projects
