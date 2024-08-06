@@ -1,15 +1,26 @@
 package controllers
 
 import (
+	"bufio"
 	"fmt"
-
+	"os"
+	"strings"
 	"github.com/mentesnot-2/library_management/models"
 	"github.com/mentesnot-2/library_management/services"
 )
 
+var book = models.Book{Status: "Available", ID: 0, Title: "The power of now", Author: "Eckhart Tolle"}
+var library = services.Library{
+	Books: make(map[int]models.Book),
+	Members: make(map[int]models.Member),
+}
+
 func AddBook() {
-	var book models.Book
-	var library services.Library
+
+	fmt.Println("Library Management System: ", library)
+	if library.Books == nil {
+		library.Books = make(map[int]models.Book)
+	}
 	var bookId = len(library.Books) + 1
 	book.ID = bookId
 
@@ -17,18 +28,22 @@ func AddBook() {
 	var author string
 	var status string
 
-	fmt.Println("Enter the title of the book: ")
-	fmt.Scanln(&title)
-	book.Title = title
+	fmt.Print("Enter the title of the book: ")
+	reader:= bufio.NewReader(os.Stdin)
+	title, _ = reader.ReadString('\n')
+	book.Title = strings.TrimSpace(title)
 
-	fmt.Println("Enter the author of the book: ")
-	fmt.Scanln(&author)
+	fmt.Print("Enter the author of the book: ")
+	newReader:= bufio.NewReader(os.Stdin)
+	author, _ = newReader.ReadString('\n')
 	book.Author = author
 
-	fmt.Println("Enter the status of the book: ")
-	fmt.Scanln(&status)
+	fmt.Print("Enter the status of the book: ")
+	statusReader:= bufio.NewReader(os.Stdin)
+	status, _ = statusReader.ReadString('\n')
 	book.Status = status
 	library.AddBook(book)
+	fmt.Println("Library Management System2: ", library.Books[bookId])
 	fmt.Println("Book added successfully")
 }
 

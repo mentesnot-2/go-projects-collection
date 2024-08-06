@@ -21,6 +21,9 @@ type Library struct {
 }
 
 func (l *Library) AddBook(book models.Book) error {
+	if l.Books == nil {
+		l.Books = make(map[int]models.Book)
+	}
 	l.Books[book.ID] = book
 	return nil
 }
