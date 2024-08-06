@@ -49,4 +49,13 @@ func main() {
 		fmt.Printf("%s: %.2f\n", subjects[i], grades[i])
 	}
 	fmt.Printf("Average Grade: %.2f\n", average)
+	var word string
+	fmt.Print("Enter a word: ")
+	fmt.Scanln(&word)
+	
+	if IsPalindrome(word) {
+		fmt.Printf("%s is a palindrome\n", word)
+	} else {
+		fmt.Printf("%s is not a palindrome\n", word)
+	}
 }
