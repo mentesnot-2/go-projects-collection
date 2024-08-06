@@ -1,8 +1,10 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"log"
+	"os"
 	"strings"
 )
 
@@ -52,10 +54,18 @@ func main() {
 	var word string
 	fmt.Print("Enter a word: ")
 	fmt.Scanln(&word)
-	
+
 	if IsPalindrome(word) {
 		fmt.Printf("%s is a palindrome\n", word)
 	} else {
 		fmt.Printf("%s is not a palindrome\n", word)
 	}
+	var sentence string
+	fmt.Print("Enter a sentence: ")
+	read:=bufio.NewReader(os.Stdin)
+	sentence, _ = read.ReadString('\n')
+	sentence = strings.TrimSpace(sentence)
+
+	wordFrequency := WordFrequency(sentence)
+	fmt.Printf("Word Frequency: %v\n", wordFrequency)
 }
