@@ -29,7 +29,7 @@ func (l *Library) RemoveBook(ID int) error {
 	delete(l.Books, ID)
 	return nil
 }
-func (l *Library) BorrowedBooks(bookId,memberId int) error {
+func (l *Library) BorrowBook(bookId,memberId int) error {
 	book := l.Books[bookId]
 	member := l.Members[memberId]
 	member.BorrowedBooks = append(member.BorrowedBooks, book)
@@ -59,13 +59,8 @@ func (l *Library) ListAvailableBooks() ([]models.Book, error) {
 	return books,nil
 }
 
-func (l *Library) ListBorrowedBooks() ([]models.Book,error) {
-	books:=[]models.Book{}
-
-	for _,book:=range l.Books {
-		if book.Status == "Borrowed" {
-			books = append(books,book)
-		}
-	}
-	return books,nil
+func (l *Library) ListBorrowedBooks(memberId int) ([]models.Book,error) {
+	
+	var borrowedBooks = l.Members[memberId].BorrowedBooks
+	return borrowedBooks,nil
 }
