@@ -1,158 +1,155 @@
 package controllers
 
 import (
-	"bufio"
-	"fmt"
-	"os"
-	"strings"
-	"github.com/mentesnot-2/library_management/models"
-	"github.com/mentesnot-2/library_management/services"
+    "bufio"
+    "fmt"
+    "github.com/mentesnot-2/library_management/models"
+    "github.com/mentesnot-2/library_management/services"
+    "os"
+    "strconv"
+    // "strings"
 )
 
-var book = models.Book{Status: "Available", ID: 0, Title: "The power of now", Author: "Eckhart Tolle"}
-var library = services.Library{
-	Books: make(map[int]models.Book),
-	Members: make(map[int]models.Member),
+func RunLibraryConsole() {
+    library := services.NewLibrary()
+
+    scanner := bufio.NewScanner(os.Stdin)
+    for {
+        fmt.Println("Library Management System")
+        fmt.Println("1. Add a new book")
+        fmt.Println("2. Remove an existing book")
+        fmt.Println("3. Borrow a book")
+        fmt.Println("4. Return a book")
+        fmt.Println("5. List all available books")
+        fmt.Println("6. List all borrowed books by a member")
+        fmt.Println("7. Exit")
+        fmt.Print("Enter your choice: ")
+
+        scanner.Scan()
+        choice, _ := strconv.Atoi(scanner.Text())
+
+        switch choice {
+        case 1:
+            addBook(scanner, library)
+        case 2:
+            removeBook(scanner, library)
+        case 3:
+            borrowBook(scanner, library)
+        case 4:
+            returnBook(scanner, library)
+        case 5:
+            listAvailableBooks(library)
+        case 6:
+            listBorrowedBooks(scanner, library)
+        case 7:
+            fmt.Println("Exiting...")
+            return
+        default:
+            fmt.Println("Invalid choice. Please try again.")
+        }
+    }
 }
 
-func AddBook() {
+func addBook(scanner *bufio.Scanner, library services.LibraryManager) {
+    fmt.Print("Enter book ID: ")
+    scanner.Scan()
+    id, _ := strconv.Atoi(scanner.Text())
 
-	fmt.Println("Library Management System: ", library)
-	if library.Books == nil {
-		library.Books = make(map[int]models.Book)
-	}
-	var bookId = len(library.Books) + 1
-	book.ID = bookId
+    fmt.Print("Enter book title: ")
+    scanner.Scan()
+    title := scanner.Text()
 
-	var title string
-	var author string
-	var status string
+    fmt.Print("Enter book author: ")
+    scanner.Scan()
+    author := scanner.Text()
 
-	fmt.Print("Enter the title of the book: ")
-	reader:= bufio.NewReader(os.Stdin)
-	title, _ = reader.ReadString('\n')
-	book.Title = strings.TrimSpace(title)
+    book := models.Book{
+        ID:     id,
+        Title:  title,
+        Author: author,
+        Status: "Available",
+    }
 
-	fmt.Print("Enter the author of the book: ")
-	newReader:= bufio.NewReader(os.Stdin)
-	author, _ = newReader.ReadString('\n')
-	book.Author = author
-
-	fmt.Print("Enter the status of the book: ")
-	statusReader:= bufio.NewReader(os.Stdin)
-	status, _ = statusReader.ReadString('\n')
-	book.Status = status
-	library.AddBook(book)
-	fmt.Println("Library Management System2: ", library.Books[bookId])
-	fmt.Println("Book added successfully")
+    library.AddBook(book)
+    fmt.Println("Book added successfully.")
 }
 
-func RemoveBook() {
-	var library services.Library
-	var bookId int
-	fmt.Println("Enter the ID of the book you want to remove: ")
-	fmt.Scanln(&bookId)
+func removeBook(scanner *bufio.Scanner, library services.LibraryManager) {
+    fmt.Print("Enter book ID to remove: ")
+    scanner.Scan()
+    id, _ := strconv.Atoi(scanner.Text())
 
-	// Check if the bookId does exist in library.Books
-	if _, ok := library.Books[bookId]; !ok {
-		fmt.Println("The book does not exist")
-		return
-	}
-
-	library.RemoveBook(bookId)
-	fmt.Println("Book removed successfully")
+    err := library.RemoveBook(id)
+    if err != nil {
+        fmt.Println("Error:", err)
+    } else {
+        fmt.Println("Book removed successfully.")
+    }
 }
 
-func BorrowBook() {
-	var library services.Library
-	var bookId int
-	var memberId int
-	fmt.Println("Enter the ID of the book you want to borrow: ")
-	fmt.Scanln(&bookId)
+func borrowBook(scanner *bufio.Scanner, library services.LibraryManager) {
+    fmt.Print("Enter book ID to borrow: ")
+    scanner.Scan()
+    bookID, _ := strconv.Atoi(scanner.Text())
 
-	// Check if the bookId does exist in library.Books
-	if _, ok := library.Books[bookId]; !ok {
-		fmt.Println("The book does not exist")
-		return
+    fmt.Print("Enter member ID: ")
+    scanner.Scan()
+    memberID, _ := strconv.Atoi(scanner.Text())
 
-	}
-	if library.Books[bookId].Status == "Borrowed" {
-		fmt.Println("The book is already borrowed")
-		return
-	}
-
-	fmt.Println("Enter the ID of the member: ")
-	fmt.Scanln(&memberId)
-
-	// Check if the memberId does exist in library.Members
-	if _, ok := library.Members[memberId]; !ok {
-		fmt.Println("The member does not exist")
-		return
-	}
-
-	book:=library.Books[bookId]
-	book.Status = "Borrowed"
-	library.Books[bookId] = book
-
-	library.BorrowBook(bookId, memberId)
-	fmt.Println("Book borrowed successfully")
+    err := library.BorrowBook(bookID, memberID)
+    if err != nil {
+        fmt.Println("Error:", err)
+    } else {
+        fmt.Println("Book borrowed successfully.")
+    }
 }
 
-func ReturnBook() {
-	var library services.Library
-	var bookId int
-	var memberId int
+func returnBook(scanner *bufio.Scanner, library services.LibraryManager) {
+    fmt.Print("Enter book ID to return: ")
+    scanner.Scan()
+    bookID, _ := strconv.Atoi(scanner.Text())
 
-	fmt.Println("Enter the ID of the book you want to return: ")	
-	fmt.Scanln(&bookId)
+    fmt.Print("Enter member ID: ")
+    scanner.Scan()
+    memberID, _ := strconv.Atoi(scanner.Text())
 
-	// Check if the bookId does exist in library.Books
-	fmt.Println("Enter the ID of the member: ")
-	fmt.Scanln(&memberId)
-
-
-	borrowedBooks:=library.Members[memberId].BorrowedBooks
-	for _, book:=range borrowedBooks {
-		if book.ID == bookId {
-			book.Status = "Available"
-			library.Books[bookId] = book
-			library.ReturnBook(bookId, memberId)
-			fmt.Println("Book returned successfully")
-			return
-		}
-	}
+    err := library.ReturnBook(bookID, memberID)
+    if err != nil {
+        fmt.Println("Error:", err)
+    } else {
+        fmt.Println("Book returned successfully.")
+    }
 }
 
-func ListAvailableBooks() {
-	var library services.Library
-
-	books,err:= library.ListAvailableBooks()
-	if err != nil {
-		fmt.Println("Error listing available books")
-		return
-	}
-	for _, book:=range books {
-		fmt.Printf("Title: %s By: %s\n", book.Title, book.Author)
-	}
-	
+func listAvailableBooks(library services.LibraryManager) {
+    books := library.ListAvailableBooks()
+    if len(books) == 0 {
+        fmt.Println("No available books.")
+        return
+    }
+    fmt.Println("Available Books:")
+    for _, book := range books {
+        fmt.Printf("ID: %d, Title: %s, Author: %s\n", book.ID, book.Title, book.Author)
+    }
 }
 
-func ListBorrowedBooks() {
-	var library services.Library
-	var memberId int
+func listBorrowedBooks(scanner *bufio.Scanner, library services.LibraryManager) {
+    fmt.Print("Enter member ID: ")
+    scanner.Scan()
+    memberID, _ := strconv.Atoi(scanner.Text())
 
-	fmt.Println("Enter the ID of the member: ")
-	fmt.Scanln(&memberId)
+    books, err := library.ListBorrowedBooks(memberID)
+    if err != nil {
+        fmt.Println("Error:", err)
+        return
+    }
 
-	if _, ok := library.Members[memberId]; !ok {
-		fmt.Println("The member does not exist")
-		return 
-	}
-   books,err:= library.ListBorrowedBooks(memberId)
-	if err != nil {
-		fmt.Println("Error listing borrowed books")
-	}
-	for _, book:=range books {
-		fmt.Printf("Title: %s By: %s\n", book.Title, book.Author)
-	}
+    if len(books) == 0 {
+        fmt.Println("No borrowed books for this member.")
+        return
+    }
+    fmt.Println("Borrowed Books:")
+    for _, book := range books {
+        fmt.Printf("ID: %d, Title: %s, Author: %s\n", book.ID, book.Title, book.Author)
+    }
 }
