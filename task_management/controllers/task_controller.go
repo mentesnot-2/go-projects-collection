@@ -1,11 +1,12 @@
 package controllers
 
-
 import (
+	"fmt"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 	"github.com/mentesnot-2/task_management/data"
 	"github.com/mentesnot-2/task_management/models"
-	"github.com/gin-gonic/gin"
 )
 
 func GetTasks(c *gin.Context) {
@@ -31,6 +32,7 @@ func CreateTask(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return 
 	}
+	fmt.Println(task)
 	task = data.CreateTask(task)
 	c.JSON(http.StatusCreated,task)
 }
