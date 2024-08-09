@@ -11,9 +11,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-// const connectionStrings = "mongodb+srv://mente:123mongodb1234@cluster0.evfwybz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-// const dbName = "test"
-// const collectionName = "tasks"
 
 var Collection *mongo.Collection
 
