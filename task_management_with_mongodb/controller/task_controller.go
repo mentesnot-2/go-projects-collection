@@ -18,7 +18,7 @@ func CreateTask(c *gin.Context) {
 		c.JSON(500, gin.H{"error": err.Error()})
 		return
 	}
-	c.JSON(201, task)
+	c.JSON(201, gin.H{"message": "Task created successfully", "result": task})
 }
 
 func GetTasks(c *gin.Context) {
@@ -56,7 +56,7 @@ func GetTask(c *gin.Context) {
 		c.JSON(404, gin.H{"error": "Task not found"})
 		return
 	}
-	c.JSON(200, task)
+	c.JSON(200, gin.H{"message": "Task retrieved successfully", "Task": task})
 }
 
 func DeleteTask(c *gin.Context) {
