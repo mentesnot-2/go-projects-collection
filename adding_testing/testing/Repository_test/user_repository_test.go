@@ -22,7 +22,7 @@ type UserSuite struct {
 }
 
 func (suite *UserSuite) SetupSuite() {
-	err := godotenv.Load("../.env")
+	err := godotenv.Load("../../.env")
 	if err != nil {
 		suite.T().Fatal(err)
 	}

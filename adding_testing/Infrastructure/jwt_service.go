@@ -26,7 +26,6 @@ func NewJWTService(secretKey string) JWTService{
 func (j *JWTServiceImpl) GenerateToken(userID string) (string,error) {
 	claims := jwt.MapClaims{}
 	claims["user_id"] = userID
-	// claims["role"] = role
 	claims["exp"] = time.Now().Add(time.Hour * 72).Unix()
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256,claims)
 	return token.SignedString([]byte(j.secretKey))

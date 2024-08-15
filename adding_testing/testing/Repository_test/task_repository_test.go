@@ -21,7 +21,7 @@ type TaskSuite struct {
 }
 
 func (suite *TaskSuite) SetupSuite() {
-	err := godotenv.Load("../.env")
+	err := godotenv.Load("../../.env")
 	if err != nil {
 		suite.T().Fatal(err)
 	}
