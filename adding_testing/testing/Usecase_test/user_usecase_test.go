@@ -5,8 +5,8 @@ import (
 
 	"github.com/mentesnot-2/adding_testing/Domain"
 	"github.com/mentesnot-2/adding_testing/Usecase"
-	"github.com/mentesnot-2/adding_testing/testing/mocks/infrastructure"
-	"github.com/mentesnot-2/adding_testing/testing/mocks/repository"
+	"github.com/mentesnot-2/adding_testing/testing/mocks/Infrastructure"
+	"github.com/mentesnot-2/adding_testing/testing/mocks/Repository"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
